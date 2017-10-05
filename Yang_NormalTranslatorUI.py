@@ -359,12 +359,12 @@ class mayaDockableWindow( MayaQWidgetDockableMixin, QT.QtWidgets.QMainWindow  ):
 
 	def syncToSelection(self):
 		"""This function is used to sync the UI/Tool everytime Maya Changes Selection."""
-		print "SELECTION CHANGED."
+#		print "SELECTION CHANGED."
 		selVerArray = cmds.ls( selection=True, fl=True )
 #		if selVerArray :
 #			self.getVertexSelection
 		if self.selectlive == True:
-			print "selectlive,checkSelection"
+#			print "selectlive,checkSelection"
 			self.checkSelection(selVerArray)
 		else:
 			print"selectnotlive"
@@ -836,7 +836,7 @@ class mayaDockableWindow( MayaQWidgetDockableMixin, QT.QtWidgets.QMainWindow  ):
 		return [v1[0]+v2[0], v1[1] + v2[1], v1[2] + v2[2]]
 #link with nrmedittool
 	def applySpinbox(self):
-		print"start applySpinbox"
+#		print"start applySpinbox"
 		toolId = -1 - self.Toolfuncgrp.checkedId()
 		ChangeVec = [self.ValueXfloat.value(),self.ValueYfloat.value(),self.ValueZfloat.value()]		
 		selVerArray = cmds.ls( selection=True, fl=True )
@@ -944,10 +944,10 @@ class mayaDockableWindow( MayaQWidgetDockableMixin, QT.QtWidgets.QMainWindow  ):
 	#	selVerArray = cmds.ls( selection=True, fl=True )
 #		print "selVerArray",selVerArray
 #		currentsel = cmds.polyListComponentConversion( selVerArray, tv=True)
-		print"start checkSelection"
-		print selVerArray
+#		print"start checkSelection"
+#		print selVerArray
 		if self.savedsel == selVerArray:
-			print'same'
+#			print'same'
 			if self.selectlive:
 				self.applySpinbox()
 				self.applyIntensity()
@@ -958,13 +958,13 @@ class mayaDockableWindow( MayaQWidgetDockableMixin, QT.QtWidgets.QMainWindow  ):
 			print "is sphere"
 #			cmds.SelectToggleMode()
 		elif any('__NrmTrans_SpherizeTarget' in s for s in selVerArray):
-			print "is sphere part"
+#			print "is sphere part"
 			cmds.select('__NrmTrans_SpherizeTarget')
 		elif not selVerArray:
 			print"checkSelection:nothing selected"
 		elif any('.vtx' in s for s in selVerArray ):
 			if not self.VecOriginlist:
-				print "no before selection"
+#				print "no before selection"
 				pass
 			else:
 #				print"zerooldSelection"
