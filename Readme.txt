@@ -91,6 +91,15 @@ Line 7-9:
 
 		if you have trouble closing the window. rerun the script to open the tool and then close it.(It seems to be an issue with 2017 Update 4)
 		
+		
+Update:
+For those who have a problem linking the two files together
+for example getting an errors like
+"# AttributeError: 'module' object has no attribute 'ApplyNormals'"
+open the file "Yang_NormalTranslaterTool_1file_ver.py"
+and copy all the text to the Script Editor then run.
+you can make that to a shelf tool as well！
+
 Thank you for your time, have fun!
 		
 #--------------------------------------------------------------------------
@@ -171,5 +180,12 @@ Yang_NormalTranslatorUI.launchUI()
 	6. NrmtoCol,ColtoNrm,EmptyCol: 会将顶点法线和顶点颜色相互切换，EmptyCol会清空顶点颜色
 	
 某些版本关闭会有些问题，请再次运行开启脚本，再关闭。
+	
+更新:
+那些无法关联两个文件的用户，得到类似这样的报错
+"# AttributeError: 'module' object has no attribute 'ApplyNormals'"
+解决方案是记事本打开 "Yang_NormalTranslaterTool_1file_ver.py"
+全部复制到Script Editor运行.
+可以做成工具栏的工具哦！
 	
 那么其他没什么了，感谢使用！我会加油努力的！
