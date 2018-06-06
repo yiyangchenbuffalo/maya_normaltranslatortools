@@ -1089,7 +1089,7 @@ def launchUI():
 	#IF it doesn't exists... Make a new window...
 	nuWindow =										mayaDockableWindow( )
 	globals()[uiName] =								nuWindow
-	nuWindow.show									(dockable = 	False,
+	nuWindow.show									(dockable = 	True,
 													area=			'right',
 													floating = 		True )
 	nuWindow.raise_ ( )
