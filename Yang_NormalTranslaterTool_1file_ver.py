@@ -8,7 +8,6 @@
 # Note	   : Credits to Charlie McKenna for helping me out
 #			   
 #--------------------------------------------------------------------------
-import Yang_NormalEditingTools as nrmedittool
 from maya.app.general.mayaMixin import MayaQWidgetDockableMixin
 import PySide2 as QT
 import maya.cmds as cmds
@@ -388,7 +387,7 @@ class mayaDockableWindow( MayaQWidgetDockableMixin, QT.QtWidgets.QMainWindow  ):
 		cmds.scriptJob( kill=self._selChangedJob, force=True)
 		cmds.scriptJob( kill=self._SphereMovedJob, force=True)
 #		self.setvtxtoorigin()
-		nrmedittool.ApplyNormals(self.VecOriginlist,self.TarNorArray,0)
+		ApplyNormals(self.VecOriginlist,self.TarNorArray,0)
 		self.stopfunction = False
 		cmds.delete( '__NrmTrans_SpherizeTarget' )
 		cmds.delete( 'Mat_RigTransp_Blue_ShaderG' )
@@ -837,7 +836,7 @@ class mayaDockableWindow( MayaQWidgetDockableMixin, QT.QtWidgets.QMainWindow  ):
 			print "selection over limit"
 			self.stopfunction = True
 			return
-		self.TarNorArray = nrmedittool.AddMulNor(ChangeVec, toolId, self.VecOriginlist)
+		self.TarNorArray = AddMulNor(ChangeVec, toolId, self.VecOriginlist)
 		return 
 
 	def applyIntensity(self):
@@ -845,7 +844,7 @@ class mayaDockableWindow( MayaQWidgetDockableMixin, QT.QtWidgets.QMainWindow  ):
 			print "vertex amount over limit, change selection plz"
 			return
 		toolIntensity = float(self.SliderIntensity.value())/200
-		nrmedittool.ApplyNormals(self.VecOriginlist,self.TarNorArray,toolIntensity)
+		ApplyNormals(self.VecOriginlist,self.TarNorArray,toolIntensity)
 		return
 
 	def zerooldSelection(self):
@@ -853,7 +852,7 @@ class mayaDockableWindow( MayaQWidgetDockableMixin, QT.QtWidgets.QMainWindow  ):
 		if self.stopfunction:
 			self.stopfunction = False
 			return
-		nrmedittool.ApplyNormals(self.VecOriginlist,self.TarNorArray,0)
+		ApplyNormals(self.VecOriginlist,self.TarNorArray,0)
 		return
 
 	def applyTool(self):
@@ -861,7 +860,7 @@ class mayaDockableWindow( MayaQWidgetDockableMixin, QT.QtWidgets.QMainWindow  ):
 			print "vertex amount over limit, change selection plz"
 			return
 		selVerArray = cmds.ls( selection=True, fl=True )
-		self.VecOriginlist = nrmedittool.BuildVecOrigin()
+		self.VecOriginlist = BuildVecOrigin()
 		self.applySpinbox()
 		self.applyIntensity()
 		self.SliderIntensity.setValue(0)
@@ -961,15 +960,15 @@ class mayaDockableWindow( MayaQWidgetDockableMixin, QT.QtWidgets.QMainWindow  ):
 				if self.stopfunction:
 					self.stopfunction = False
 				else:
-					nrmedittool.ApplyNormals(self.VecOriginlist,self.TarNorArray,0)
+					ApplyNormals(self.VecOriginlist,self.TarNorArray,0)
 			
 #			self.savedsel = selVerArray
 			self.Vertexselect = selVerArray
 		#####get all vtxFace of an object and edit it first to prevent the normal splitting bug###
-			nrmedittool.Activeallvtxface()
-#			nrmedittool.ApplyNormals(self.VecOriginlist,self.TarNorArray,toolIntensity)
+			Activeallvtxface()
+#			ApplyNormals(self.VecOriginlist,self.TarNorArray,toolIntensity)
 #			self.checkobjnormals(selVerArray)
-			self.VecOriginlist = nrmedittool.BuildVecOrigin()
+			self.VecOriginlist = BuildVecOrigin()
 #			print "selection changed: current selection:" ,self.OriginVectorDic
 			if self.selectlive:
 				self.applySpinbox()
@@ -1007,7 +1006,7 @@ class mayaDockableWindow( MayaQWidgetDockableMixin, QT.QtWidgets.QMainWindow  ):
 			cmds.polySoftEdge( a=self.NormalAngle.value() )
 #			cmds.polyNormalPerVertex(cmds.polyListComponentConversion( selVerArray, tv=True ),ufn=True)
 			cmds.select(selVerArray)
-			self.VecOriginlist = nrmedittool.BuildVecOrigin()
+			self.VecOriginlist = BuildVecOrigin()
 			self.SliderIntensity.setValue(0)
 			self.selectlive = True
 			return
@@ -1017,7 +1016,7 @@ class mayaDockableWindow( MayaQWidgetDockableMixin, QT.QtWidgets.QMainWindow  ):
 			cmds.select(cmds.polyListComponentConversion( selVerArray, te=True ))
 			cmds.polySoftEdge( a=self.NormalAngle.value() )
 			cmds.select(selVerArray)
-			self.VecOriginlist = nrmedittool.BuildVecOrigin()
+			self.VecOriginlist = BuildVecOrigin()
 			return
 			#		cmds.polyNormalPerVertex(ufn=True)
 			
@@ -1043,24 +1042,24 @@ class mayaDockableWindow( MayaQWidgetDockableMixin, QT.QtWidgets.QMainWindow  ):
 			return
 		cmds.polyColorPerVertex( cdo=True )
 		toolIntensity = float(self.SliderIntensity.value())/200
-		nrmedittool.NormaltoColor(self.VecOriginlist,self.TarNorArray,toolIntensity)
-		self.VecOriginlist = nrmedittool.BuildVecOrigin()
+		NormaltoColor(self.VecOriginlist,self.TarNorArray,toolIntensity)
+		self.VecOriginlist = BuildVecOrigin()
 		self.SliderIntensity.setValue(0)
 		
 	def convertColtoNrm(self):
 		if self.stopfunction:
 			print "vertex amount over limit, change selection plz"
 			return
-		nrmedittool.ColortoNormal(self.VecOriginlist)
-		self.VecOriginlist = nrmedittool.BuildVecOrigin()
+		ColortoNormal(self.VecOriginlist)
+		self.VecOriginlist = BuildVecOrigin()
 		self.SliderIntensity.setValue(0)
 		
 	def emptyCol(self):
 		if self.stopfunction:
 			print "vertex amount over limit, change selection plz"
 			return
-		nrmedittool.EmptyColor(self.VecOriginlist)
-		self.VecOriginlist = nrmedittool.BuildVecOrigin()
+		EmptyColor(self.VecOriginlist)
+		self.VecOriginlist = BuildVecOrigin()
 		self.SliderIntensity.setValue(0)
 		
 #This is the FUNCTION that will LAUNCH the Window
