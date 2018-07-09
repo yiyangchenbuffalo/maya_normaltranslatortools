@@ -359,13 +359,13 @@ class mayaDockableWindow( MayaQWidgetDockableMixin, QT.QtWidgets.QMainWindow  ):
 
 	def syncToSelection(self):
 		"""This function is used to sync the UI/Tool everytime Maya Changes Selection."""
-#		print "SELECTION CHANGED."
-		selVerArray = cmds.ls( selection=True, fl=True )
+		#		print "SELECTION CHANGED."
+		stsselVerArray = cmds.ls( selection= True, fl=True )
 #		if selVerArray :
 #			self.getVertexSelection
 		if self.selectlive == True:
 #			print "selectlive,checkSelection"
-			self.checkSelection(selVerArray)
+			self.checkSelection(stsselVerArray)
 		else:
 			print"selectnotlive"
 #		self.applySpinbox()
@@ -839,10 +839,10 @@ class mayaDockableWindow( MayaQWidgetDockableMixin, QT.QtWidgets.QMainWindow  ):
 #		print"start applySpinbox"
 		toolId = -1 - self.Toolfuncgrp.checkedId()
 		ChangeVec = [self.ValueXfloat.value(),self.ValueYfloat.value(),self.ValueZfloat.value()]		
-		selVerArray = cmds.ls( selection=True, fl=True )
-		if not selVerArray:
+		asbselVerArray = cmds.ls( selection=True, fl=True )
+		if not asbselVerArray:
 			print "applySpinbox:nothing selected"
-		VerCountFloat = len(selVerArray)
+		VerCountFloat = len(asbselVerArray)
 		if VerCountFloat > self.vertexlimit:
 			print "selection over limit"
 			self.stopfunction = True
@@ -870,7 +870,7 @@ class mayaDockableWindow( MayaQWidgetDockableMixin, QT.QtWidgets.QMainWindow  ):
 		if self.stopfunction:
 			print "vertex amount over limit, change selection plz"
 			return
-		selVerArray = cmds.ls( selection=True, fl=True )
+		#atselVerArray = cmds.ls( selection=True, fl=True )
 		self.VecOriginlist = nrmedittool.BuildVecOrigin()
 		self.applySpinbox()
 		self.applyIntensity()
@@ -909,8 +909,8 @@ class mayaDockableWindow( MayaQWidgetDockableMixin, QT.QtWidgets.QMainWindow  ):
 			return
 	
 	def getCenterTarget(self):
-		selVerArray = cmds.ls( selection=True, fl=True )
-		pointCon = selVerArray[len(selVerArray)-1]
+		gctselVerArray = cmds.ls( selection=True, fl=True )
+		pointCon = gctselVerArray[len(gctselVerArray)-1]
 		if '.vtx' in pointCon or '.map' in pointCon:
 			newcoor = cmds.pointPosition(pointCon)
 #			cmds.setAttr( '__NrmTrans_SpherizeTarget.translate', newcoor )
@@ -925,7 +925,7 @@ class mayaDockableWindow( MayaQWidgetDockableMixin, QT.QtWidgets.QMainWindow  ):
 			newcoor = [newcoor[0]/pointcount,newcoor[1]/pointcount,newcoor[2]/pointcount]
 			cmds.setAttr( '__NrmTrans_SpherizeTarget.translate', newcoor[0],newcoor[1],newcoor[2] )
 		else:
-			cmds.pointConstraint(selVerArray[0], '__NrmTrans_SpherizeTarget',n='__tobedelete_pointConstraint' )
+			cmds.pointConstraint(gctselVerArray[0], '__NrmTrans_SpherizeTarget',n='__tobedelete_pointConstraint' )
 			cmds.delete ('__tobedelete_pointConstraint')
 
 	def setvtxtoorigin(self):
@@ -946,7 +946,9 @@ class mayaDockableWindow( MayaQWidgetDockableMixin, QT.QtWidgets.QMainWindow  ):
 #		currentsel = cmds.polyListComponentConversion( selVerArray, tv=True)
 #		print"start checkSelection"
 #		print selVerArray
-		if self.savedsel == selVerArray:
+		if not selVerArray:
+			print"checkSelection:nothing selected"
+		elif self.savedsel == selVerArray:
 #			print'same'
 			if self.selectlive:
 				self.applySpinbox()
@@ -956,12 +958,9 @@ class mayaDockableWindow( MayaQWidgetDockableMixin, QT.QtWidgets.QMainWindow  ):
 		elif '__NrmTrans_SpherizeTarget' in selVerArray:
 #			self.SpherizeTargetselected= True
 			print "is sphere"
-#			cmds.SelectToggleMode()
 		elif any('__NrmTrans_SpherizeTarget' in s for s in selVerArray):
 #			print "is sphere part"
 			cmds.select('__NrmTrans_SpherizeTarget')
-		elif not selVerArray:
-			print"checkSelection:nothing selected"
 		elif any('.vtx' in s for s in selVerArray ):
 			if not self.VecOriginlist:
 #				print "no before selection"
@@ -1003,8 +1002,8 @@ class mayaDockableWindow( MayaQWidgetDockableMixin, QT.QtWidgets.QMainWindow  ):
 			cmds.polyOptions( dn=True,pt=True )
 		
 	def HardedgeNormals(self):
-		selVerArray = cmds.ls( selection=True, fl=True )
-		if not selVerArray:
+		henselVerArray = cmds.ls( selection=True, fl=True )
+		if not henselVerArray:
 			pass
 			print "nothing selected"
 			return
@@ -1013,10 +1012,10 @@ class mayaDockableWindow( MayaQWidgetDockableMixin, QT.QtWidgets.QMainWindow  ):
 			self.selectlive = False
 #			print "self.selectlive", self.selectlive
 			cmds.polyNormalPerVertex(ufn=True)
-			cmds.select(cmds.polyListComponentConversion( selVerArray, te=True ))
+			cmds.select(cmds.polyListComponentConversion( henselVerArray, te=True ))
 			cmds.polySoftEdge( a=self.NormalAngle.value() )
 #			cmds.polyNormalPerVertex(cmds.polyListComponentConversion( selVerArray, tv=True ),ufn=True)
-			cmds.select(selVerArray)
+			cmds.select(henselVerArray)
 			self.VecOriginlist = nrmedittool.BuildVecOrigin()
 			self.SliderIntensity.setValue(0)
 			self.selectlive = True
@@ -1024,9 +1023,9 @@ class mayaDockableWindow( MayaQWidgetDockableMixin, QT.QtWidgets.QMainWindow  ):
 		else:
 #			print"test: sel is not live in HardedgeNormals"
 			cmds.polyNormalPerVertex(ufn=True)
-			cmds.select(cmds.polyListComponentConversion( selVerArray, te=True ))
+			cmds.select(cmds.polyListComponentConversion( henselVerArray, te=True ))
 			cmds.polySoftEdge( a=self.NormalAngle.value() )
-			cmds.select(selVerArray)
+			cmds.select(henselVerArray)
 			self.VecOriginlist = nrmedittool.BuildVecOrigin()
 			return
 			#		cmds.polyNormalPerVertex(ufn=True)
@@ -1044,8 +1043,8 @@ class mayaDockableWindow( MayaQWidgetDockableMixin, QT.QtWidgets.QMainWindow  ):
 		else:
 			self.selectlive = True
 			self.btnSelectlive.setText('Live On')
-			selVerArray = cmds.ls( selection=True, fl=True )
-			self.checkSelection(selVerArray)
+			tslselVerArray = cmds.ls( selection=True, fl=True )
+			self.checkSelection(tslselVerArray)
 			
 	def convertNrmtoCol(self):
 		if self.stopfunction:
@@ -1099,14 +1098,4 @@ def launchUI():
 #THIS is the piece of Code that acutally calls the Launch Function...
 #SaveToolData=[0,0,0,1,1,1,0,0,0,0,0,0]
 #oldtoolId=1
-
-
-
-
-
-
-
-
-
-
 
